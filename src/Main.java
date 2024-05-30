@@ -20,21 +20,22 @@ public class Main {
         String firstOperand = array[0];
         String secondOperand = array[2];
         String operator = array[1];
-        boolean isFirstNumberRoman = isRoman(firstOperand);
-        boolean isSecondNumberRoman = isRoman(secondOperand);
+        boolean isFirstNumberArabic = isArabic(firstOperand);
+        boolean isSecondNumberArabic = isArabic(secondOperand);
 
-        if (isFirstNumberRoman && isSecondNumberRoman){
-            int firstArabicNumber = RomanNumbers.valueOf(firstOperand).getValue();
-            int secondArabicNumber = RomanNumbers.valueOf(secondOperand).getValue();
-            if (firstArabicNumber<1 || firstArabicNumber>10 || secondArabicNumber<1 || secondArabicNumber>10){
+        if (!isFirstNumberArabic && !isSecondNumberArabic){
+            try{
+                int firstArabicNumber = RomanNumbers.valueOf(firstOperand).getValue();
+                int secondArabicNumber = RomanNumbers.valueOf(secondOperand).getValue();
+                int result = calculate(firstArabicNumber,secondArabicNumber,operator);
+                if (result<1){
+                    throw new IllegalArgumentException("Результат меньше единицы недопустим в римской системе счисления");
+                }
+                return RomanConverter.toRoman(result);
+            } catch (IllegalArgumentException e){
                 throw new IllegalArgumentException("Допустимый диапозон чисел от 1 до 10 включительно");
             }
-            int result = calculate(firstArabicNumber,secondArabicNumber,operator);
-            if (result<1){
-                throw new IllegalArgumentException("Результат меньше единицы недопустим в римской системе счисления");
-            }
-            return RomanConverter.toRoman(result);
-        }else if (!isFirstNumberRoman && !isSecondNumberRoman){
+        }else if (isFirstNumberArabic && isSecondNumberArabic){
             int firstArabicNumber =  Integer.parseInt(firstOperand);
             int secondArabicNumber = Integer.parseInt(secondOperand);
             if (firstArabicNumber<1 || firstArabicNumber>10 || secondArabicNumber<1 || secondArabicNumber>10){
@@ -65,9 +66,9 @@ public class Main {
 
         }
     }
-    public static boolean isRoman(String str) {
+    public static boolean isArabic(String str) {
         try{
-            RomanNumbers.valueOf(str);
+            Integer.parseInt(str);
             return true;
         }catch (IllegalArgumentException e){
             return false;
